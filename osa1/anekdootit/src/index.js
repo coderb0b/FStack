@@ -22,9 +22,7 @@ const App = (props) => {
 	  <Button handleClick={() => vote()} text="vote"/>
 	  <Button handleClick={() => setSelected(Rand(max, min))} text="next anecdotes"/>
 	  <h1>Anecdote with most votes</h1>
-      {props.anecdotes[selected]} <br />
-	  has {votes[selected]} <br />
-	  <Best votes={votes} />
+	  <Best votes={votes} anecdotes={props.anecdotes} />
     </div>
   )
 }
@@ -48,20 +46,24 @@ const Rand = (max, min) => {
 	
 }
 
-const Best = (votes) => {
+const Best = ({ votes, anecdotes }) => {
 	
-	const max = votes[0]
-	const maxIndex = 0
+	let max = votes[0]
+	let maxIndex = 0
 	
-	for(const i = 0; i < votes.length; i++) {
+	for(var i = 0; i < votes.length; i++) {
 		if (votes[i] > max) {
 			maxIndex = i
 			max = votes[i]
 		}
-		
 	}
-	
-	return 0
+
+	return (
+	<>
+	  {anecdotes[maxIndex]} <br />
+	  has {votes[maxIndex]} <br />
+	</>
+	)
 }
 
 

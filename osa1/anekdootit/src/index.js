@@ -7,13 +7,24 @@ const App = (props) => {
   const max = anecdotes.length - 1
   const [votes, setVotes] = useState(new Array(max+2).join('0').split('').map(parseFloat))
   
+  const vote = () => {
+	const copy = [...votes]
+	copy[selected] += 1	
+	setVotes(copy)
+}
+  
   
   return (
     <div>
+	  <h1>Anecdote of the day</h1>
       {props.anecdotes[selected]} <br />
 	  has {votes[selected]} <br />
-	  <Button handleClick={() => vote(votes, selected)} text="vote"/>
+	  <Button handleClick={() => vote()} text="vote"/>
 	  <Button handleClick={() => setSelected(Rand(max, min))} text="next anecdotes"/>
+	  <h1>Anecdote with most votes</h1>
+      {props.anecdotes[selected]} <br />
+	  has {votes[selected]} <br />
+	  <Best votes={votes} />
     </div>
   )
 }
@@ -37,13 +48,23 @@ const Rand = (max, min) => {
 	
 }
 
-const vote = (votes, selected) => {
-	const copy = [...votes]
-	copy[selected] += 1	
-	console.log(copy)
-	return copy
+const Best = (votes) => {
 	
+	const max = votes[0]
+	const maxIndex = 0
+	
+	for(const i = 0; i < votes.length; i++) {
+		if (votes[i] > max) {
+			maxIndex = i
+			max = votes[i]
+		}
+		
+	}
+	
+	return 0
 }
+
+
 
 
 

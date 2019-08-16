@@ -4,7 +4,7 @@ const Course = (props) => {
 	
 	return (
 	  <>
-		<Header course={props.courses.name}/>
+		<Header course={props.course.name}/>
 	    <Content parts={props.course.parts}/>
 	    <Total parts={props.course.parts}/>
 	  </>

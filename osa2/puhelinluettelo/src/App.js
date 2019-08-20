@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import Person from './components/Person'
+import Filter from './components/Filter'
+import AddPerson from './components/AddPerson'
 
 const App = () => {
   const [ persons, setPersons] = useState([
@@ -31,17 +33,14 @@ const App = () => {
   }
   
   const handleNameChange = (event) => {
-	  console.log(event.target.value)
 	  setNewName(event.target.value)
   }
   
   const handleNumberChange = (event) => {
-	  console.log(event.target.value)
 	  setNewNumber(event.target.value)
   }
   
   const handleShowPersonsChange = (event) => {
-	  console.log(event.target.value)
 	  setShowPersons(event.target.value)
   }
   
@@ -60,30 +59,9 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-	    <div>
-		  filter shown with <input
-		  value={showPersons}
-		  onChange={handleShowPersonsChange}
-		  />
-		</div>
+	    <Filter showPersons={showPersons} handleShowPersonsChange={handleShowPersonsChange} />
 	  <h2>add a new</h2>
-      <form onSubmit={addName}>
-        <div>
-          name: <input 
-		  value={newName} 
-		  onChange={handleNameChange}
-		  />
-        </div>
-		<div>
-          number: <input 
-		  value={newNumber} 
-		  onChange={handleNumberChange}
-		  />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <AddPerson addName={addName} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
       <h2>Numbers</h2>
 	  {rows()}
     </div>

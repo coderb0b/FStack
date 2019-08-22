@@ -1,12 +1,14 @@
 import React from 'react'
+import Weather from './Weather'
 
-const Country = ({ name, capital, population, languages, flag }) => {
+
+const Country = ({ name, capital, population, languages, flag, handleButton }) => {
 
   if (population == null) {
     
     return (
       <div>
-        <>{name}</>
+        <>{name} <button onClick={handleButton} country={name}>show</button></>
       </div>
     )
   }
@@ -19,9 +21,9 @@ const Country = ({ name, capital, population, languages, flag }) => {
         <ul>
           {languages.map(lang => <li key={lang.name}>{lang.name}</li>)}
         </ul>
-        <img
-          src={flag} alt="flag" height="120" width="190"
-        />
+        <img src={flag} alt="flag" height="120" width="190"/>
+		<h2>Weather in {capital}</h2>
+		<Weather capital={capital} />
       </div>
     )
 }

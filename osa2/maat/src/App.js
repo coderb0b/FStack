@@ -7,8 +7,13 @@ const App = () => {
   const [ countries, setCountries] = useState([])
   const [ showCountries, setShowCountries ] = useState('')
   
+  
   const handleShowCountriesChange = (event) => {
 	  setShowCountries(event.target.value)
+  }
+  
+  const handleButtonShowCountry = (event) => {
+	  setShowCountries(event.target.attributes.country.value)
   }
   
   const countriesToShow = showCountries === ''
@@ -39,6 +44,7 @@ const App = () => {
           <Country
             key={country.name}
             name={country.name}
+			handleButton={handleButtonShowCountry}
           />
         )
       )
@@ -53,6 +59,9 @@ const App = () => {
       })
   }
   useEffect(hook, [])
+  
+  
+
 
   return (
     <div>

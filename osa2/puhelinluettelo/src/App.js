@@ -32,10 +32,11 @@ const App = () => {
 	  }
   }
   
-  const deletePerson = (event, id) => {
-	  console.log("poisto", id)
-	  //personService
-	    //.remove()
+  const deletePerson = (id, name) => {
+	  if (window.confirm(`Delete ${name} ?`)) {
+		personService
+		.remove(id)
+	  }
   }
   
   const handleNameChange = (event) => {
@@ -59,7 +60,7 @@ const App = () => {
 		  key={person.id}
 		  name={person.name}
 		  number={person.number}
-		  deletePerson={(event) => deletePerson(event, person.id)}
+		  deletePerson={(event) => deletePerson(person.id, event, person.name)}
 		/>
 	)
   

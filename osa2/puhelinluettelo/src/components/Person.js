@@ -2,10 +2,11 @@ import React from 'react'
 
 const Person = ({ name, number, deletePerson }) => {
   return (
-    <>{name} {number} 
-	  <form onSubmit={deletePerson}>
-	    <button type="submit">poisto</button>
-	  </form>
+  <>
+    <form onSubmit={() => deletePerson(name)}>
+      {name} {number} {` `}
+		  <button type="submit">delete</button><br/>
+    </form>
 	</>
   )
 }

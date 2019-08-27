@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import Person from './components/Person'
 import Filter from './components/Filter'
 import AddPerson from './components/AddPerson'
+import personService from './services/persons'
 
 const App = () => {
   const [ persons, setPersons] = useState([]) 
@@ -14,7 +14,6 @@ const App = () => {
 	  event.preventDefault()
 	  const personObject = {
 		  name: newName,
-		  id: persons.length + 1,
 		  number: newNumber,
 		  date: new Date().toISOString(),
 	  }
@@ -22,10 +21,21 @@ const App = () => {
 	  if (persons.some(p => p.name === personObject.name)) {
 		  alert(`${newName} is already added to phonebook`)
 	  } else {
-		  setPersons(persons.concat(personObject))
-	      setNewName('')
-		  setNewNumber('')
+		  
+		  personService
+		    .create(personObject)
+			.then(response => {
+				setPersons(persons.concat(response.data))
+				setNewName('')
+				setNewNumber('')
+			})
 	  }
+  }
+  
+  const deletePerson = (event, id) => {
+	  console.log("poisto", id)
+	  //personService
+	    //.remove()
   }
   
   const handleNameChange = (event) => {
@@ -45,20 +55,23 @@ const App = () => {
 	: persons.filter(person => person.name.toLowerCase().includes(showPersons.toLowerCase()))
   
   const rows =() => personsToShow.map(person =>
-    <Person
-      key={person.id}
-      person={person}
-    />
-  )
+		<Person
+		  key={person.id}
+		  name={person.name}
+		  number={person.number}
+		  deletePerson={(event) => deletePerson(event, person.id)}
+		/>
+	)
   
-  const hook = () => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data)
-      })
-  }
-  useEffect(hook, [])
+  
+  useEffect(() => {
+	  personService
+	  .getAll()
+	  .then(response => {
+		  setPersons(response.data)
+	  })
+  }, [])
+  
 
   return (
     <div>

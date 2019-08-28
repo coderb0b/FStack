@@ -18,8 +18,17 @@ const App = () => {
 		  date: new Date().toISOString(),
 	  }
 	  
-	  if (persons.some(p => p.name === personObject.name)) {
-		  alert(`${newName} is already added to phonebook`)
+	  const person = persons.find(p => p.name === personObject.name)
+	  
+	  if (typeof person !== "undefined") {
+		  if (window.confirm(`${personObject.name} is already added to phonebook, replace the old number with a new one?`)) {
+			  const changedPersonNumber = { ...person, number: personObject.number }
+			  personService
+			    .update(person.id, changedPersonNumber)
+				.then(response => {
+				setPersons(persons.map(p => p.id !== person.id ? p : response.data))
+				})
+		  }
 	  } else {
 		  
 		  personService

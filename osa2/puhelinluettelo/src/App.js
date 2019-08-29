@@ -3,12 +3,16 @@ import Person from './components/Person'
 import Filter from './components/Filter'
 import AddPerson from './components/AddPerson'
 import personService from './services/persons'
+import Notification from './components/Notification'
+import './index.css'
+
 
 const App = () => {
   const [ persons, setPersons] = useState([]) 
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ showPersons, setShowPersons ] = useState('')
+  const [ successMessage, setSuccessMessage ] = useState(null)
 
   const addName = (event) => {
 	  event.preventDefault()
@@ -27,6 +31,12 @@ const App = () => {
 			    .update(person.id, changedPersonNumber)
 				.then(response => {
 				setPersons(persons.map(p => p.id !== person.id ? p : response.data))
+				setSuccessMessage(`Changed number for ${person.name}`)
+				setTimeout(() => {
+					setSuccessMessage(null)
+				}, 2000)
+				setNewName('')
+				setNewNumber('')
 				})
 		  }
 	  } else {
@@ -37,14 +47,26 @@ const App = () => {
 				setPersons(persons.concat(response.data))
 				setNewName('')
 				setNewNumber('')
+				setSuccessMessage(`Added ${personObject.name}`)
+				setTimeout(() => {
+					setSuccessMessage(null)
+				}, 2000)
 			})
 	  }
   }
   
-  const deletePerson = (id, name) => {
+  const deletePerson = (id, event, name) => {
+	  event.preventDefault()
 	  if (window.confirm(`Delete ${name} ?`)) {
 		personService
-		.remove(id)
+		  .remove(id)
+		  .then(() => {
+			setPersons(persons.filter(p => p.id !== id))
+			setSuccessMessage(`Deleted ${name}`)
+		  })
+		  setTimeout(() => {
+			setSuccessMessage(null)
+		}, 2000)
 	  }
   }
   
@@ -86,11 +108,12 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+	    <Notification message={successMessage} />
 	    <Filter showPersons={showPersons} handleShowPersonsChange={handleShowPersonsChange} />
 	  <h2>add a new</h2>
-      <AddPerson addName={addName} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
+        <AddPerson addName={addName} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
       <h2>Numbers</h2>
-	  {rows()}
+	    {rows()}
     </div>
   )
 

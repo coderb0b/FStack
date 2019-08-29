@@ -3,7 +3,7 @@ import React from 'react'
 const Person = ({ name, number, deletePerson }) => {
   return (
   <>
-    <form onSubmit={() => deletePerson(name)}>
+    <form onSubmit={(event) => deletePerson(event)}>
       {name} {number} {` `}
 		  <button type="submit">delete</button><br/>
     </form>

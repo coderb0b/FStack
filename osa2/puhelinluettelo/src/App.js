@@ -12,7 +12,7 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ showPersons, setShowPersons ] = useState('')
-  const [ successMessage, setSuccessMessage ] = useState(null)
+  const [ newMessage, setNewMessage ] = useState(null)
 
   const addName = (event) => {
 	  event.preventDefault()
@@ -31,12 +31,15 @@ const App = () => {
 			    .update(person.id, changedPersonNumber)
 				.then(response => {
 				setPersons(persons.map(p => p.id !== person.id ? p : response.data))
-				setSuccessMessage(`Changed number for ${person.name}`)
+				setNewMessage(`Changed number for ${person.name}`)
 				setTimeout(() => {
-					setSuccessMessage(null)
+					setNewMessage(null)
 				}, 2000)
 				setNewName('')
 				setNewNumber('')
+				})
+				.catch(error => {
+					setNewMessage(`Information of ${person.name} has been removed from server`, error)
 				})
 		  }
 	  } else {
@@ -47,9 +50,9 @@ const App = () => {
 				setPersons(persons.concat(response.data))
 				setNewName('')
 				setNewNumber('')
-				setSuccessMessage(`Added ${personObject.name}`)
+				setNewMessage(`Added ${personObject.name}`)
 				setTimeout(() => {
-					setSuccessMessage(null)
+					setNewMessage(null)
 				}, 2000)
 			})
 	  }
@@ -62,10 +65,10 @@ const App = () => {
 		  .remove(id)
 		  .then(() => {
 			setPersons(persons.filter(p => p.id !== id))
-			setSuccessMessage(`Deleted ${name}`)
+			setNewMessage(`Deleted ${name}`)
 		  })
 		  setTimeout(() => {
-			setSuccessMessage(null)
+			setNewMessage(null)
 		}, 2000)
 	  }
   }
@@ -108,7 +111,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-	    <Notification message={successMessage} />
+	    <Notification message={newMessage} />
 	    <Filter showPersons={showPersons} handleShowPersonsChange={handleShowPersonsChange} />
 	  <h2>add a new</h2>
         <AddPerson addName={addName} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />

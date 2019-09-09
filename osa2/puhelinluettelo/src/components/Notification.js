@@ -3,18 +3,18 @@ import React from 'react'
 const Notification = ({ message, error }) => {
   if (message === null) {
     return null
-  } else if (error !== null) {
+  } else if (message.includes("has been removed")) {
     return (
-      <div className="error">
+	  <div className="error">
         {message}
       </div>
     )
   }
 
   return (
-    <div className="success">
-      {message}
-    </div>
+	  <div className="success">
+        {message}
+      </div>
   )
 }
 

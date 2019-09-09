@@ -39,7 +39,8 @@ const App = () => {
 				setNewNumber('')
 				})
 				.catch(error => {
-					setNewMessage(`Information of ${person.name} has been removed from server`, error)
+					const virhe = "virhe"
+					setNewMessage(`Information of ${person.name} has been removed from server`, virhe)
 				})
 		  }
 	  } else {

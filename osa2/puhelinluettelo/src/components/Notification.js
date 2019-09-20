@@ -1,9 +1,10 @@
 import React from 'react'
 
-const Notification = ({ message, error }) => {
+const Notification = ({ message }) => {
+	console.log("notification", typeof(message))
   if (message === null) {
     return null
-  } else if (message.includes("has been removed")) {
+  } else if (message.includes("Error")) {
     return (
 	  <div className="error">
         {message}

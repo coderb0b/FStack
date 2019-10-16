@@ -95,6 +95,36 @@ test('blog with no title or url fields is not created', async () => {
   expect(response.body.length).toBe(helper.initialBlogs.length)
 })
 
+test('blog is deleted', async () => {
+  const blogsBeforeDelete = await helper.blogsInDb()
+  const blogToDelete = blogsBeforeDelete[0]
+
+  await api
+    .delete(`/api/blogs/${blogToDelete.id}`)
+    .expect(204)
+
+  const blogsAfterDelete = await helper.blogsInDb()
+  const contents = blogsAfterDelete.map(r => r.title)
+  expect(contents).not.toContain(blogToDelete.title)
+})
+
+test('number of likes can be edited', async () => {
+  const blogsBeforeEdit = await helper.blogsInDb()
+  const blogToEdit = blogsBeforeEdit[0]
+
+  const newBlog = {
+    likes: 2
+  }
+
+  await api
+    .put(`/api/blogs/${blogToEdit.id}`)
+    .send(newBlog)
+    .expect(200)
+
+  const blogsAfterEdit = await helper.blogsInDb()
+  expect(blogsAfterEdit[0].likes).toBe(newBlog.likes)
+})
+
 
 afterAll(() => {
   mongoose.connection.close()

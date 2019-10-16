@@ -5,6 +5,7 @@ const initialBlogs = [
     title: 'Testi blogi',
     author: 'Pertti',
     url: 'www.test.blog.eu',
+    likes: 723,
     id: '5d8c8a43770de5439096e54b'
   },
   {

@@ -12,7 +12,11 @@ const blogSchema = mongoose.Schema({
     type: String,
     required: true
   },
-  likes: Number
+  likes: Number,
+  user: {
+	type: mongoose.Schema.Types.ObjectId,
+	ref: 'User'
+  }
 })
 
 const Blog = mongoose.model('Blog', blogSchema)

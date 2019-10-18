@@ -3,25 +3,25 @@ const Blog = require('../models/blog')
 const User = require('../models/user')
 
 blogsRouter.get('/', async (request, response) => {
-  const blogs = await Blog.find({})
+  const blogs = await Blog.find({}).populate('user', { blogs: 0 })
   response.json(blogs.map(b => b.toJSON()))
 })
 
 blogsRouter.post('/', async (request, response, next) => {
   const body = request.body
-  const user = await User.find({}).limit(1)
+  const user = await User.findById('5da9cf1685c7a8666455b28a')
 
   const blog = new Blog({
     title: body.title,
     author: body.author,
     url: body.url,
     likes: body.likes === '' ? 0 : body.likes,
-	user: user._id
+    user: user._id
   })
   try {
     const savedBlog = await blog.save()
-	user.blogs = user.blogs.concat(savedBlog._id)
-	await user.save()
+    user.blogs = user.blogs.concat(savedBlog._id)
+    await user.save()
     response.json(savedBlog.toJSON())
   } catch(exception) {
     next(exception)

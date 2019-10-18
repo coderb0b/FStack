@@ -12,14 +12,14 @@ const blogSchema = mongoose.Schema({
     type: String,
     required: true
   },
-  likes: Number,
   user: {
-	type: mongoose.Schema.Types.ObjectId,
-	ref: 'User'
-  }
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  likes: Number
 })
 
-const Blog = mongoose.model('Blog', blogSchema)
+
 
 blogSchema.set('toJSON', {
   transform: (document, returnedObject) => {
@@ -29,4 +29,7 @@ blogSchema.set('toJSON', {
   }
 })
 
+const Blog = mongoose.model('Blog', blogSchema)
+
 module.exports = mongoose.model('Blog', blogSchema)
+//module.exports = Blog

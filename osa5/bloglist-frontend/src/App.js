@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import loginService from './services/login'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
+import AddBlog from './components/AddBlog'
 
 
 const App = () => {
@@ -10,6 +11,12 @@ const App = () => {
 	const [errorMessage, setErrorMessage] = useState(null)
 	const [user, setUser] = useState(null)
 	const [blogs, setBlogs] = useState([])
+	const [newBlog, setNewBlog] = useState(null)
+	const [newTitle, setNewTitle] = useState('')
+	const [newAuthor, setNewAuthor] = useState('')
+	const [newUrl, setNewUrl] = useState('')
+
+	
 	
 	useEffect(() => {
 		blogService
@@ -53,6 +60,39 @@ const App = () => {
         </form>
 	</div>
 	)
+
+	const addBlog = async (event) => {
+		try {
+			event.preventDefault()
+			const blogObject = {
+				title: newTitle,
+				author: newAuthor,
+				url: newUrl
+			}
+	
+			await blogService
+			  .create(blogObject)
+				.then(data => {
+					setBlogs(blogs.concat(data))
+					setNewTitle('')
+					setNewAuthor('')
+					setNewUrl('')
+				})
+
+		} catch(exception) {
+			setErrorMessage(exception.response.data.error)
+		}
+	}
+
+	const handleTitleChange = (event) => {
+		setNewTitle(event.target.value)
+	}
+	const handleAuthorChange = (event) => {
+		setNewAuthor(event.target.value)
+	}
+	const handleUrlChange = (event) => {
+		setNewUrl(event.target.value)
+	}
 	
 	const handleLogin = async (event) => {
 		event.preventDefault()
@@ -91,7 +131,8 @@ const App = () => {
 		<h2>blogs</h2>
 		  <p>{user.name} logged in <button onClick={handleLogout}>logout</button>
 		  </p>
-          {blogs.map(blog =>
+		  <AddBlog addBlog={addBlog} newTitle={newTitle} newAuthor={newAuthor} newUrl={newUrl} handleTitleChange={handleTitleChange} handleAuthorChange={handleAuthorChange} handleUrlChange={handleUrlChange} />
+		  {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
 		</div>}

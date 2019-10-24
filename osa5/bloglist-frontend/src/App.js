@@ -3,18 +3,18 @@ import loginService from './services/login'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import AddBlog from './components/AddBlog'
-
+import Notification from './components/Notification'
 
 const App = () => {
 	const [username, setUsername] = useState('')
 	const [password, setPassword] = useState('')
-	const [errorMessage, setErrorMessage] = useState(null)
 	const [user, setUser] = useState(null)
 	const [blogs, setBlogs] = useState([])
-	const [newBlog, setNewBlog] = useState(null)
 	const [newTitle, setNewTitle] = useState('')
 	const [newAuthor, setNewAuthor] = useState('')
 	const [newUrl, setNewUrl] = useState('')
+	const [message, setMessage] = useState(null)
+	const [messageType, setMessageType] = useState(null)
 
 	
 	
@@ -77,10 +77,16 @@ const App = () => {
 					setNewTitle('')
 					setNewAuthor('')
 					setNewUrl('')
+					setMessage(`a new blog ${newTitle} by ${newAuthor} added`)
+					setMessageType('success')
+					setTimeout(() => {
+						setMessage(null)
+					}, 5000)
 				})
 
 		} catch(exception) {
-			setErrorMessage(exception.response.data.error)
+			setMessage(exception.response.data.error)
+			setMessageType('error')
 		}
 	}
 
@@ -104,13 +110,22 @@ const App = () => {
 			window.localStorage.setItem(
 			  'loggedUser', JSON.stringify(user)
 			)
+			blogService.setToken(user.token)
 			setUser(user)
 			setUsername('')
 			setPassword('')
-		} catch (exception) {
-			setErrorMessage('wrong credentials')
+			setMessage(`${user.name} logged in`)
+			setMessageType('success')
 			setTimeout(() => {
-				setErrorMessage(null)
+				setMessage(null)
+				setMessageType(null)
+			}, 5000)
+		} catch (exception) {
+			setMessage('wrong credentials')
+			setMessageType('error')
+			setTimeout(() => {
+				setMessage(null)
+				setMessageType(null)
 			}, 5000)
 		}
 	}
@@ -125,6 +140,7 @@ const App = () => {
 	
 	return (
 	<div>
+		<Notification message={message} className={messageType} />
 	  {user === null ?
 	    loginForm() :
 		<div>

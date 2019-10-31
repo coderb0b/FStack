@@ -3,6 +3,7 @@ import loginService from './services/login'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import AddBlog from './components/AddBlog'
+import Togglable from './components/Togglable'
 import Notification from './components/Notification'
 
 const App = () => {
@@ -15,6 +16,7 @@ const App = () => {
 	const [newUrl, setNewUrl] = useState('')
 	const [message, setMessage] = useState(null)
 	const [messageType, setMessageType] = useState(null)
+	const addBlogRef = React.createRef()
 
 	
 	
@@ -64,6 +66,7 @@ const App = () => {
 	const addBlog = async (event) => {
 		try {
 			event.preventDefault()
+			addBlogRef.current.toggleVisibility()
 			const blogObject = {
 				title: newTitle,
 				author: newAuthor,
@@ -147,7 +150,9 @@ const App = () => {
 		<h2>blogs</h2>
 		  <p>{user.name} logged in <button onClick={handleLogout}>logout</button>
 		  </p>
-		  <AddBlog addBlog={addBlog} newTitle={newTitle} newAuthor={newAuthor} newUrl={newUrl} handleTitleChange={handleTitleChange} handleAuthorChange={handleAuthorChange} handleUrlChange={handleUrlChange} />
+		  <Togglable buttonLabel="new blog" ref={addBlogRef}>
+		    <AddBlog addBlog={addBlog} newTitle={newTitle} newAuthor={newAuthor} newUrl={newUrl} handleTitleChange={handleTitleChange} handleAuthorChange={handleAuthorChange} handleUrlChange={handleUrlChange} />
+		  </Togglable>
 		  {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}

@@ -14,7 +14,6 @@ const App = () => {
 	const [newTitle, setNewTitle] = useState('')
 	const [newAuthor, setNewAuthor] = useState('')
 	const [newUrl, setNewUrl] = useState('')
-	const [newLikes, setNewLikes] = useState('')
 	const [message, setMessage] = useState(null)
 	const [messageType, setMessageType] = useState(null)
 	const addBlogRef = React.createRef()
@@ -64,17 +63,18 @@ const App = () => {
 	</div>
 	)
 
-	const addBlog = async (event) => {
+	const addBlog = (event) => {
 		try {
 			event.preventDefault()
 			addBlogRef.current.toggleVisibility()
 			const blogObject = {
 				title: newTitle,
 				author: newAuthor,
-				url: newUrl
+				url: newUrl,
+				likes: 0
 			}
-	
-			await blogService
+				
+			blogService
 			  .create(blogObject)
 				.then(data => {
 					setBlogs(blogs.concat(data))
@@ -141,22 +141,23 @@ const App = () => {
 	}
 	
 	const likeBlog = (id, event) => {
+		try {
 		event.preventDefault()
 		const blog = blogs.find(b => b.id === id)
-		console.log("pppppppppppppppppppppppppp", blog.user.id)
-		/*
-		//const newLikes = blog.likes + 1
-		const blogObject = {
-			user: user.id,
-			likes: newLikes,
-			author: newAuthor,
-			title: newTitle,
-			url: newUrl,
+		
+		const newLikes = blog.likes + 1
+		const changedBlog = { ...blog, likes: newLikes }
+		blogService
+		  .update(id, changedBlog)
+		  .then(returnedBlog => {
+			  setBlogs(blogs.map(b => b.id === returnedBlog.id ? changedBlog : b))
+		  })
+
+		} catch (exception) {
+			setMessage(exception.response.data.error)
+			setMessageType('error')
 		}
-		*/
-		//const blog = blogs.find(b => b.name)
-		//blogService
-		  //.update(id)
+		
 	}
 	
 	

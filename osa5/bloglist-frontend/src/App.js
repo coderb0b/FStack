@@ -14,6 +14,7 @@ const App = () => {
 	const [newTitle, setNewTitle] = useState('')
 	const [newAuthor, setNewAuthor] = useState('')
 	const [newUrl, setNewUrl] = useState('')
+	const [newLikes, setNewLikes] = useState('')
 	const [message, setMessage] = useState(null)
 	const [messageType, setMessageType] = useState(null)
 	const addBlogRef = React.createRef()
@@ -139,6 +140,25 @@ const App = () => {
 		setUser(null)
 	}
 	
+	const likeBlog = (id, event) => {
+		event.preventDefault()
+		const blog = blogs.find(b => b.id === id)
+		console.log("pppppppppppppppppppppppppp", blog.user.id)
+		/*
+		//const newLikes = blog.likes + 1
+		const blogObject = {
+			user: user.id,
+			likes: newLikes,
+			author: newAuthor,
+			title: newTitle,
+			url: newUrl,
+		}
+		*/
+		//const blog = blogs.find(b => b.name)
+		//blogService
+		  //.update(id)
+	}
+	
 	
 	
 	return (
@@ -154,7 +174,11 @@ const App = () => {
 		    <AddBlog addBlog={addBlog} newTitle={newTitle} newAuthor={newAuthor} newUrl={newUrl} handleTitleChange={handleTitleChange} handleAuthorChange={handleAuthorChange} handleUrlChange={handleUrlChange} />
 		  </Togglable>
 		  {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog 
+		  key={blog.id} 
+		  blog={blog}
+          likeBlog={(event) => likeBlog(blog.id, event)}		  
+		/>
       )}
 		</div>}
     </div>

@@ -9,7 +9,7 @@ const getAll = () => {
 }
 
 const setToken = newToken => {
-	token = `bearer ${newToken}`
+  token = `bearer ${newToken}`
 }
 
 const create = async newObject => {
@@ -20,6 +20,14 @@ const create = async newObject => {
   return response.data
 }
 
+const remove = (id) => {
+  const config = {
+    headers: { Authorization: token }
+  }
+  const request = axios.delete(`${baseUrl}/${id}`, config)
+  return request.then(response => response.data)
+}
+
 const update = (id, newObject) => {
   const config = {
     headers: { Authorization: token }
@@ -28,4 +36,4 @@ const update = (id, newObject) => {
   return request.then(response => response.data)
 }
 
-export default { getAll, setToken, create, update }
+export default { getAll, setToken, create, update, remove }

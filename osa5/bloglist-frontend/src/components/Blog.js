@@ -20,10 +20,10 @@ const Blog = ({ blog, likeBlog, deleteBlog, user }) => {
 
   return (
     <div style={blogStyle}>
-      <div onClick={toggleVisibility}>
+      <div onClick={toggleVisibility} className="clickable">
         {blog.title} {blog.author}
       </div>
-      <div style={hideWhenVisible}>
+      <div style={hideWhenVisible} className="togglableContent">
         {blog.url} <br />
         <form onSubmit={(event) => likeBlog(event)}>
           {blog.likes} likes {' '}

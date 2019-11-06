@@ -21,5 +21,29 @@ describe('<App />', () => {
       'testi blogi'
     )
   })
+
+  test('if user is logged in, blogs are rendered', async () => {
+    const user = {
+      username: 'heimo',
+      token: '5234234123',
+      name: 'Heimo Vesa'
+    }
+
+    localStorage.setItem('loggedUser', JSON.stringify(user))
+
+    const component = render(
+      <App />
+    )
+
+    await waitForElement(
+      () => component.getByText('blogs')
+    )
+
+    expect(component.container).toHaveTextContent(
+      'testi blogi'
+    )
+  })
 })
+
+
 

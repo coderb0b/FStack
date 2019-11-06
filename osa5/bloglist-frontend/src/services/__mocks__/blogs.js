@@ -12,9 +12,15 @@ const blogs = [
   }
 ]
 
+let token = null
+
 const getAll = () => {
   return Promise.resolve(blogs)
 }
 
-export default { getAll }
+const setToken = newToken => {
+  token = `bearer ${newToken}`
+}
+
+export default { getAll, setToken }
 

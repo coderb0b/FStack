@@ -9,8 +9,6 @@ import { useField } from './hooks'
 
 
 const App = () => {
-  const [setUsername] = useState('')
-  const [setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [blogs, setBlogs] = useState([])
   const [newTitle, setNewTitle] = useState('')
@@ -37,8 +35,8 @@ const App = () => {
     }
   }, [])
   
-  const username = useField('text')
-  const password = useField('password')
+  const userLogin = useField('text')
+  const passwordLogin = useField('password')
 
   const loginForm = () => (
     <div>
@@ -46,11 +44,11 @@ const App = () => {
       <form onSubmit={handleLogin}>
         <div>
 		username
-          <input {...username} />
+          <input {...userLogin} />
         </div>
         <div>
 		password
-          <input {...password} />
+          <input {...passwordLogin} />
         </div>
         <button type="submit">login</button>
       </form>
@@ -98,30 +96,37 @@ const App = () => {
     setNewUrl(event.target.value)
   }
 
-  const handleLogin = async (event) => {
+  const handleLogin = (event) => {
     event.preventDefault()
-    try {
-      const user = await loginService.login({username, password,})
-
-      window.localStorage.setItem('loggedUser', JSON.stringify(user))
-      blogService.setToken(user.token)
-      setUser(user)
-      setUsername('')
-      setPassword('')
-      setMessage(`${user.name} logged in`)
-      setMessageType('success')
-      setTimeout(() => {
-        setMessage(null)
-        setMessageType(null)
-      }, 5000)
-    } catch (exception) {
-      setMessage('wrong credentials')
-      setMessageType('error')
-      setTimeout(() => {
-        setMessage(null)
-        setMessageType(null)
-      }, 5000)
-    }
+	
+	loginService.login(userLogin.value, passwordLogin.value).then((response) => {
+		  if(response.data) {
+			  const user = {
+				  username: response.data.username,
+				  name: response.data.name,
+				  token: response.data.token
+			  }
+			  window.localStorage.setItem('loggedUser', JSON.stringify(user))
+			  
+			  blogService.setToken(user.token)
+                setUser(user)
+                setMessage(`${user.name} logged in`)
+                setMessageType('success')
+                setTimeout(() => {
+                  setMessage(null)
+                  setMessageType(null)
+                }, 5000)
+		    }
+	    }).catch((error) => {
+			if (error.response && error.response.status === 401) {
+				setMessage('wrong credentials')
+                setMessageType('error')
+                setTimeout(() => {
+                  setMessage(null)
+                  setMessageType(null)
+                }, 5000)
+			}
+		})
   }
 
   function handleLogout(event) {

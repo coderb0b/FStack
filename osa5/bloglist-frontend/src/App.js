@@ -17,6 +17,8 @@ const App = () => {
   const [message, setMessage] = useState(null)
   const [messageType, setMessageType] = useState(null)
   const addBlogRef = React.createRef()
+  const username = useField('text')
+  const password = useField('password')
 
 
 
@@ -35,26 +37,23 @@ const App = () => {
     }
   }, [])
   
-  const userLogin = useField('text')
-  const passwordLogin = useField('password')
-
   const loginForm = () => (
     <div>
       <h2>Log in to application</h2>
       <form onSubmit={handleLogin}>
         <div>
 		username
-          <input {...userLogin} />
+          <input {...username.input} />
         </div>
         <div>
 		password
-          <input {...passwordLogin} />
+          <input {...password.input} />
         </div>
         <button type="submit">login</button>
       </form>
     </div>
   )
-
+/*
   const addBlog = (event) => {
     try {
       event.preventDefault()
@@ -85,7 +84,7 @@ const App = () => {
       setMessageType('error')
     }
   }
-
+*/
   const handleTitleChange = (event) => {
     setNewTitle(event.target.value)
   }
@@ -95,21 +94,24 @@ const App = () => {
   const handleUrlChange = (event) => {
     setNewUrl(event.target.value)
   }
-
+  
   const handleLogin = (event) => {
     event.preventDefault()
 	
-	loginService.login(userLogin.value, passwordLogin.value).then((response) => {
+	loginService.login(username.input.value, password.input.value).then((response) => {
 		  if(response.data) {
 			  const user = {
 				  username: response.data.username,
 				  name: response.data.name,
 				  token: response.data.token
 			  }
+			  
 			  window.localStorage.setItem('loggedUser', JSON.stringify(user))
 			  
 			  blogService.setToken(user.token)
                 setUser(user)
+				username.reset()
+				password.reset()
                 setMessage(`${user.name} logged in`)
                 setMessageType('success')
                 setTimeout(() => {
@@ -124,6 +126,8 @@ const App = () => {
                 setTimeout(() => {
                   setMessage(null)
                   setMessageType(null)
+				  username.reset()
+				  password.reset()
                 }, 5000)
 			}
 		})
@@ -165,6 +169,12 @@ const App = () => {
         })
     }
   }
+  
+  const notify = (message, messageType) => {
+	  setMessage(message)
+	  setMessageType(messageType)
+	  
+  }
 
 
   return (
@@ -177,7 +187,7 @@ const App = () => {
           <p>{user.name} logged in <button onClick={handleLogout}>logout</button>
           </p>
           <Togglable buttonLabel="new blog" ref={addBlogRef}>
-            <AddBlog addBlog={addBlog} newTitle={newTitle} newAuthor={newAuthor} newUrl={newUrl} handleTitleChange={handleTitleChange} handleAuthorChange={handleAuthorChange} handleUrlChange={handleUrlChange} />
+            <AddBlog blogs={blogs} setBlogs={setBlogs} notify={notify} />
           </Togglable>
           {blogs.sort((a,b) => b.likes - a.likes).map(blog =>
             <Blog

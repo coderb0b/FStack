@@ -5,11 +5,12 @@ import blogService from './services/blogs'
 import AddBlog from './components/AddBlog'
 import Togglable from './components/Togglable'
 import Notification from './components/Notification'
+import { useField } from './hooks'
 
 
 const App = () => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const [setUsername] = useState('')
+  const [setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [blogs, setBlogs] = useState([])
   const [newTitle, setNewTitle] = useState('')
@@ -35,7 +36,9 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
-
+  
+  const username = useField('text')
+  const password = useField('password')
 
   const loginForm = () => (
     <div>
@@ -43,21 +46,11 @@ const App = () => {
       <form onSubmit={handleLogin}>
         <div>
 		username
-          <input
-            type="text"
-            value={username}
-            name="Username"
-            onChange={({ target }) => setUsername(target.value)}
-          />
+          <input {...username} />
         </div>
         <div>
 		password
-          <input
-            type="password"
-            value={password}
-            name="Password"
-            onChange={({ target }) => setPassword(target.value)}
-          />
+          <input {...password} />
         </div>
         <button type="submit">login</button>
       </form>
@@ -108,9 +101,7 @@ const App = () => {
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
-      const user = await loginService.login({
-        username, password,
-      })
+      const user = await loginService.login({username, password,})
 
       window.localStorage.setItem('loggedUser', JSON.stringify(user))
       blogService.setToken(user.token)

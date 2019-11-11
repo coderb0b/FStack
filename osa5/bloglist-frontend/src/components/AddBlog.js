@@ -8,7 +8,7 @@ const AddBlog = ({ blogs, setBlogs, message, notify }) => {
 	const blogUrl = useField('text')
 	
 	const createBlog = (event) => {
-	  //event.preventDefault()
+	  event.preventDefault()
 	  const blogObject = {
         title: blogTitle.input.value,
         author: blogAuthor.input.value,
@@ -18,7 +18,7 @@ const AddBlog = ({ blogs, setBlogs, message, notify }) => {
 	  //addBlogRef.current.toggleVisibility()
 	  blogService.create(blogObject).then((response) => {
 		  setBlogs(blogs.concat(response.data))
-		  {notify('jee', 'success')}
+		  notify('jee', 'success')
 	  }).catch((error) => {
 		  console.log("set message error")
 	  })

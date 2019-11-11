@@ -21,21 +21,39 @@ const App = () => {
   const password = useField('password')
 
 
-
+/*
   useEffect(() => {
     blogService
       .getAll()
       .then(b => setBlogs(b))
   }, [])
-
+*/
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedUser')
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      blogService.setToken(user.token)
-    }
-  }, [])
+	  
+    if (user) {
+		
+      //const user = JSON.parse(loggedUserJSON)
+      //setUser(user)
+      //blogService.setToken(user.token)
+	  blogService
+      .getAll()
+      .then((response) => {
+		  setBlogs(response.data || [])
+	  }).catch((error) => {
+		  console.log("set message error")
+	  })
+	  
+	  
+    } else {
+		const loggedUserJSON = window.localStorage.getItem('loggedUser')
+		if (loggedUserJSON) {
+		  const user = JSON.parse(loggedUserJSON)
+          setUser(user)
+		  blogService.setToken(user.token)
+		}
+		
+	}
+  }, [user])
   
   const loginForm = () => (
     <div>
@@ -189,15 +207,16 @@ const App = () => {
           <Togglable buttonLabel="new blog" ref={addBlogRef}>
             <AddBlog blogs={blogs} setBlogs={setBlogs} notify={notify} />
           </Togglable>
-          {blogs.sort((a,b) => b.likes - a.likes).map(blog =>
+          {blogs.sort((a,b) => b.likes - a.likes).map((blog) => {
+			  return (
             <Blog
               key={blog.id}
               blog={blog}
               likeBlog={(event) => likeBlog(blog.id, event)}
               deleteBlog={(event) => deleteBlog(blog.id, blog.title, event)}
               user={user}
-            />
-          )}
+            />)
+          })}
         </div>}
     </div>
   )

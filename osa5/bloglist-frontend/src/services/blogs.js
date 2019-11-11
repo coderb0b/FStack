@@ -4,8 +4,9 @@ const baseUrl = '/api/blogs'
 let token = null
 
 const getAll = () => {
-  const request = axios.get(baseUrl)
-  return request.then(response => response.data)
+  //const request = axios.get(baseUrl)
+  //return request.then(response => response.data)
+  return axios.get(baseUrl)
 }
 
 const setToken = newToken => {
@@ -22,12 +23,18 @@ const create = async newObject => {
 */
 
 const create = (blogObject) => {
-	const config = {
-    headers: { Authorization: token }
-  }
+  const config = {
+      headers: { Authorization: token }
+    }
+
+/*
+	
   
   const request = axios.post(baseUrl, blogObject, config)
   return request.then(response => response.data)
+  */
+  
+  return axios.post(baseUrl, blogObject, config)
 }
 
 

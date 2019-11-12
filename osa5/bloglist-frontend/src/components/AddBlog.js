@@ -15,10 +15,13 @@ const AddBlog = ({ blogs, setBlogs, message, notify }) => {
         url: blogUrl.input.value,
         likes: 0
       }
-	  //addBlogRef.current.toggleVisibility()
+	  
 	  blogService.create(blogObject).then((response) => {
 		  setBlogs(blogs.concat(response.data))
-		  notify('jee', 'success')
+		  blogTitle.reset()
+		  blogAuthor.reset()
+		  blogUrl.reset()
+		  notify(`a new blog ${blogObject.title} by ${blogObject.author} added`, 'success')
 	  }).catch((error) => {
 		  console.log("set message error")
 	  })

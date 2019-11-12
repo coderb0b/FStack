@@ -21,20 +21,8 @@ const App = () => {
   const password = useField('password')
 
 
-/*
   useEffect(() => {
-    blogService
-      .getAll()
-      .then(b => setBlogs(b))
-  }, [])
-*/
-  useEffect(() => {
-	  
     if (user) {
-		
-      //const user = JSON.parse(loggedUserJSON)
-      //setUser(user)
-      //blogService.setToken(user.token)
 	  blogService
       .getAll()
       .then((response) => {
@@ -71,38 +59,7 @@ const App = () => {
       </form>
     </div>
   )
-/*
-  const addBlog = (event) => {
-    try {
-      event.preventDefault()
-      addBlogRef.current.toggleVisibility()
-      const blogObject = {
-        title: newTitle,
-        author: newAuthor,
-        url: newUrl,
-        likes: 0
-      }
 
-      blogService
-        .create(blogObject)
-        .then(data => {
-          setBlogs(blogs.concat(data))
-          setNewTitle('')
-          setNewAuthor('')
-          setNewUrl('')
-          setMessage(`a new blog ${newTitle} by ${newAuthor} added`)
-          setMessageType('success')
-          setTimeout(() => {
-            setMessage(null)
-          }, 5000)
-        })
-
-    } catch(exception) {
-      setMessage(exception.response.data.error)
-      setMessageType('error')
-    }
-  }
-*/
   const handleTitleChange = (event) => {
     setNewTitle(event.target.value)
   }
@@ -191,6 +148,9 @@ const App = () => {
   const notify = (message, messageType) => {
 	  setMessage(message)
 	  setMessageType(messageType)
+	  setTimeout(() => {
+            setMessage(null)
+          }, 5000)
 	  
   }
 

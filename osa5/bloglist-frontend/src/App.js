@@ -28,7 +28,8 @@ const App = () => {
       .then((response) => {
 		  setBlogs(response.data || [])
 	  }).catch((error) => {
-		  console.log("set message error")
+		  setMessage('Wrong credentials')
+		  setMessageType('error')
 	  })
 	  
 	  

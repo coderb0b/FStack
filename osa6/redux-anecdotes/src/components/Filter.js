@@ -17,19 +17,9 @@ const Filter = (props) => {
   )
 }
 
-const mapStateToProps = (state) => {
-  return {
-    filter: state.filter,
-  }
-}
-
-const mapDispatchToProps = {
-  setFilter,
-}
-
 const ConnectedFilter = connect(
-  mapStateToProps,
-  mapDispatchToProps
+  null,
+  { setFilter }
   )(Filter)
 
 export default ConnectedFilter

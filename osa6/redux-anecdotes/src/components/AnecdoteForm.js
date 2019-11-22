@@ -28,19 +28,12 @@ const AnecdoteForm = (props) => {
 	)
 }
 
-const mapStateToProps = (state) => {
-	return {
-		anecdote: state.anecdote,
-		notification: state.notification
-	}
-}
-
 const mapDispatchToProps = {
 	createAnecdote, notificationCreate, clear
 }
 
 const ConnectedAnecdoteForm = connect(
-	mapStateToProps,
+	null,
 	mapDispatchToProps
 )(AnecdoteForm)
 

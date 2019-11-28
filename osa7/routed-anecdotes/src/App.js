@@ -69,7 +69,7 @@ const Footer = () => (
   </div>
 )
 
-const CreateNew = (props) => {
+let CreateNew = (props) => {
   const [content, setContent] = useState('')
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
@@ -82,8 +82,7 @@ const CreateNew = (props) => {
       info,
       votes: 0
     })
-    console.log("pppppppppppppppppppp")
-    return <Redirect to="/" />
+	props.history.push('/')
   }
 
   return (
@@ -108,6 +107,8 @@ const CreateNew = (props) => {
   )
 
 }
+
+  CreateNew = withRouter(CreateNew)
 
 const App = () => {
   const [anecdotes, setAnecdotes] = useState([

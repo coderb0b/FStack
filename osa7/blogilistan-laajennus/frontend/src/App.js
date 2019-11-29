@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { connect } from 'react-redux'
 import loginService from './services/login'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
@@ -7,10 +6,9 @@ import AddBlog from './components/AddBlog'
 import Togglable from './components/Togglable'
 import Notification from './components/Notification'
 import { useField } from './hooks'
-import { setNotification } from './reducers/notificationReducer'
 
 
-const App = (props) => {
+const App = () => {
   const [user, setUser] = useState(null)
   const [blogs, setBlogs] = useState([])
   const [newTitle, setNewTitle] = useState('')
@@ -21,7 +19,6 @@ const App = (props) => {
   const addBlogRef = React.createRef()
   const username = useField('text')
   const password = useField('password')
-
 
 
   useEffect(() => {
@@ -169,7 +166,7 @@ const App = (props) => {
           <p>{user.name} logged in <button onClick={handleLogout}>logout</button>
           </p>
           <Togglable buttonLabel="new blog" ref={addBlogRef}>
-            <AddBlog store={props.store} blogs={blogs} setBlogs={setBlogs} notify={notify} />
+            <AddBlog blogs={blogs} setBlogs={setBlogs} notify={notify} />
           </Togglable>
           {blogs.sort((a,b) => b.likes - a.likes).map((blog) => {
 			  return (

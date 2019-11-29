@@ -1,15 +1,11 @@
 import React from 'react'
-import { connect } from 'react-redux'
 import { useField } from './../hooks'
 import blogService from '../services/blogs'
-import { setNotification } from '../reducers/notificationReducer'
 
-const AddBlog = (props) => {
+const AddBlog = ({ blogs, setBlogs, message, notify }) => {
 	const blogTitle = useField('text')
 	const blogAuthor = useField('text')
 	const blogUrl = useField('text')
-	
-	console.log("pppppppppppppp", props.store.dispatch(setNotification))  
 	
 	const createBlog = (event) => {
 	  event.preventDefault()
@@ -21,11 +17,11 @@ const AddBlog = (props) => {
       }
 	  
 	  blogService.create(blogObject).then((response) => {
-		  props.setBlogs(props.blogs.concat(response.data))
+		  setBlogs(blogs.concat(response.data))
 		  blogTitle.reset()
 		  blogAuthor.reset()
 		  blogUrl.reset()
-		  props.notify(`a new blog ${blogObject.title} by ${blogObject.author} added`, 'success')
+		  notify(`a new blog ${blogObject.title} by ${blogObject.author} added`, 'success')
 	  }).catch((error) => {
 		  console.log("set message error")
 	  })

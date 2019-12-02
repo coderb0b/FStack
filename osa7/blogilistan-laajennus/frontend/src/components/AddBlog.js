@@ -1,13 +1,17 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import { useField } from './../hooks'
 import blogService from '../services/blogs'
+import { setNotification } from '../reducers/notificationReducer'
 
-const AddBlog = ({ blogs, setBlogs, message, notify }) => {
+//{ store, blogs, setBlogs, message, notify }
+
+const AddBlog = (props) => {
 	const blogTitle = useField('text')
 	const blogAuthor = useField('text')
 	const blogUrl = useField('text')
 	
-	const createBlog = (event) => {
+	const createBlog = async (event) => {
 	  event.preventDefault()
 	  const blogObject = {
         title: blogTitle.input.value,
@@ -17,11 +21,12 @@ const AddBlog = ({ blogs, setBlogs, message, notify }) => {
       }
 	  
 	  blogService.create(blogObject).then((response) => {
-		  setBlogs(blogs.concat(response.data))
+		  props.setBlogs(props.blogs.concat(response.data))
 		  blogTitle.reset()
 		  blogAuthor.reset()
 		  blogUrl.reset()
-		  notify(`a new blog ${blogObject.title} by ${blogObject.author} added`, 'success')
+		  props.setNotification(`'${blogObject.title}' was created`, 3)
+		  //notify(`a new blog ${blogObject.title} by ${blogObject.author} added`, 'success')
 	  }).catch((error) => {
 		  console.log("set message error")
 	  })
@@ -46,4 +51,10 @@ const AddBlog = ({ blogs, setBlogs, message, notify }) => {
     </form>
   )
 }
-export default AddBlog
+
+const mapDispatchToProps = {
+	setNotification,
+}
+
+const ConnectedAddBlog = connect(null, mapDispatchToProps)(AddBlog)
+export default ConnectedAddBlog

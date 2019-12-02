@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { connect } from 'react-redux'
 import loginService from './services/login'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
@@ -6,6 +7,7 @@ import AddBlog from './components/AddBlog'
 import Togglable from './components/Togglable'
 import Notification from './components/Notification'
 import { useField } from './hooks'
+
 
 
 const App = () => {
@@ -19,7 +21,8 @@ const App = () => {
   const addBlogRef = React.createRef()
   const username = useField('text')
   const password = useField('password')
-
+  
+  
 
   useEffect(() => {
     if (user) {
@@ -158,7 +161,7 @@ const App = () => {
 
   return (
     <div>
-      <Notification message={message} className={messageType} />
+      <Notification />
       {user === null ?
         loginForm() :
         <div>
@@ -185,4 +188,4 @@ const App = () => {
 
 }
 
-export default App
+export default connect()(App)

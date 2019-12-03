@@ -1,4 +1,4 @@
-const notificationReducer = (state = 'testi_notifikaatio', action) => {
+const notificationReducer = (state = '', action) => {
     switch (action.type) {
         case 'CLEAR':
             return ''

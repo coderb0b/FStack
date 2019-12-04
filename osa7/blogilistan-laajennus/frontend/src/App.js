@@ -7,10 +7,12 @@ import AddBlog from './components/AddBlog'
 import Togglable from './components/Togglable'
 import Notification from './components/Notification'
 import { useField } from './hooks'
+import { initializeBlogs } from './reducers/blogReducer'
+import { setNotification } from './reducers/notificationReducer'
 
 
 
-const App = () => {
+const App = (props) => {
   const [user, setUser] = useState(null)
   const [blogs, setBlogs] = useState([])
   const [newTitle, setNewTitle] = useState('')
@@ -22,10 +24,9 @@ const App = () => {
   const username = useField('text')
   const password = useField('password')
   
-  
-
   useEffect(() => {
     if (user) {
+/*
 	  blogService
       .getAll()
       .then((response) => {
@@ -34,8 +35,8 @@ const App = () => {
 		  setMessage('Wrong credentials')
 		  setMessageType('error')
 	  })
-	  
-	  
+*/
+	  props.initializeBlogs()
     } else {
 		const loggedUserJSON = window.localStorage.getItem('loggedUser')
 		if (loggedUserJSON) {
@@ -188,4 +189,6 @@ const App = () => {
 
 }
 
-export default connect()(App)
+export default connect(null, { initializeBlogs })(App)
+
+

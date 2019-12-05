@@ -3,8 +3,16 @@ import blogService from '../services/blogs'
 const reducer = (state = [],  action) => {
 	switch (action.type) {
 		case 'INIT':
-		console.log("pppppppppppppppppppppppppp", action.data)
 		  return action.data
+		case 'LIKE':
+		  const id = action.data.id
+		  const blogToChange = state.data.find(b => b.id === id)
+		  const changedBlog = {
+			  ...blogToChange,
+			  likes: blogToChange.likes + 1
+		  }
+		  return state.data.map(b =>
+		    b.id !== id ? b : changedBlog)
 		default: return state
 	}
 }
@@ -15,6 +23,22 @@ export const initializeBlogs = () => {
 		dispatch({
 			type: 'INIT',
 			data: blogs
+		})
+	}
+}
+
+export const like = blog => {
+	return async dispatch => {
+		const changedBlog = {
+			...blog,
+			likes: blog.likes + 1
+		}
+		const newLike = await blogService.like(changedBlog)
+		dispatch({
+			type: 'LIKE',
+			data: {
+				id: newLike.id
+			}
 		})
 	}
 }

@@ -39,4 +39,9 @@ const update = (id, newObject) => {
   return request.then(response => response.data)
 }
 
-export default { getAll, setToken, create, update, remove }
+const like = async (blog) => {
+	const response = await axios.put(`${baseUrl}/${blog.id}`, blog)
+	return response.data
+}
+
+export default { getAll, setToken, create, update, remove, like }

@@ -7,14 +7,14 @@ import AddBlog from './components/AddBlog'
 import Togglable from './components/Togglable'
 import Notification from './components/Notification'
 import { useField } from './hooks'
-import { initializeBlogs } from './reducers/blogReducer'
+import { initializeBlogs, like } from './reducers/blogReducer'
 import { setNotification } from './reducers/notificationReducer'
 
 
 
 const App = (props) => {
   const [user, setUser] = useState(null)
-  const [blogs, setBlogs] = useState([])
+  const [setBlogs] = useState([])
   const [newTitle, setNewTitle] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
   const [newUrl, setNewUrl] = useState('')
@@ -122,20 +122,22 @@ const App = (props) => {
   const likeBlog = (id, event) => {
     try {
       event.preventDefault()
-      const blog = blogs.find(b => b.id === id)
-
+      const blog = props.blogs.find(b => b.id === id)
+	  props.like(blog)
+/*
       const newLikes = blog.likes + 1
       const changedBlog = { ...blog, likes: newLikes }
       blogService
         .update(id, changedBlog)
         .then(returnedBlog => {
-          setBlogs(blogs.map(b => b.id === returnedBlog.id ? changedBlog : b))
+          setBlogs(props.blogs.map(b => b.id === returnedBlog.id ? changedBlog : b))
         })
-
+*/
     } catch (exception) {
       setMessage(exception.response.data.error)
       setMessageType('error')
     }
+	
 
   }
 
@@ -145,7 +147,7 @@ const App = (props) => {
       blogService
         .remove(id)
         .then(() => {
-          setBlogs(blogs.filter(b => b.id !== id))
+          setBlogs(props.blogs.filter(b => b.id !== id))
         })
     }
   }
@@ -158,7 +160,7 @@ const App = (props) => {
           }, 5000)
 	  
   }
-
+//console.log("Wwwwwwwwwwwwwwwwwwwww", props.blogs)
 
   return (
     <div>
@@ -170,9 +172,10 @@ const App = (props) => {
           <p>{user.name} logged in <button onClick={handleLogout}>logout</button>
           </p>
           <Togglable buttonLabel="new blog" ref={addBlogRef}>
-            <AddBlog blogs={blogs} setBlogs={setBlogs} notify={notify} />
+            <AddBlog notify={notify} />
           </Togglable>
-          {blogs.sort((a,b) => b.likes - a.likes).map((blog) => {
+          {typeof props.blogs === 'undefined' ? 
+		  <div></div> : props.blogs.sort((a,b) => b.likes - a.likes).map((blog) => {
 			  return (
             <Blog
               key={blog.id}
@@ -189,6 +192,21 @@ const App = (props) => {
 
 }
 
-export default connect(null, { initializeBlogs })(App)
+const mapStateToProps = (state) => {
+	return{
+		blogs: state.blogs.data
+	}
+}
+
+const mapDispatchToProps = {
+	initializeBlogs, like
+}
+
+const ConnectedApp = connect(mapStateToProps, mapDispatchToProps)(App)
+
+export default ConnectedApp
+
+//export default connect(null, { initializeBlogs })(App)
+
 
 

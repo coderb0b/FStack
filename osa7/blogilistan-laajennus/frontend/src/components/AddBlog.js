@@ -1,39 +1,34 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { useField } from './../hooks'
-import blogService from '../services/blogs'
 import { setNotification } from '../reducers/notificationReducer'
-
-//{ store, blogs, setBlogs, message, notify }
+import { create } from '../reducers/blogReducer'
 
 const AddBlog = (props) => {
-	const blogTitle = useField('text')
-	const blogAuthor = useField('text')
-	const blogUrl = useField('text')
-	
-	const createBlog = async (event) => {
+  const blogTitle = useField('text')
+  const blogAuthor = useField('text')
+  const blogUrl = useField('text')
+
+  const createBlog = async event => {
 	  event.preventDefault()
 	  const blogObject = {
-        title: blogTitle.input.value,
-        author: blogAuthor.input.value,
-        url: blogUrl.input.value,
-        likes: 0
-      }
-	  
-	  blogService.create(blogObject).then((response) => {
-		  props.setBlogs(props.blogs.concat(response.data))
-		  blogTitle.reset()
-		  blogAuthor.reset()
-		  blogUrl.reset()
-		  props.setNotification(`'${blogObject.title}' was created`, 3)
-		  //notify(`a new blog ${blogObject.title} by ${blogObject.author} added`, 'success')
-	  }).catch((error) => {
-		  console.log("set message error")
-	  })
+      title: blogTitle.input.value,
+      author: blogAuthor.input.value,
+      url: blogUrl.input.value,
+      likes: 0
+    }
+
+    try {
+      props.create(blogObject)
+      props.setNotification(`'${blogObject.title}' was created`, 3)
+      blogTitle.reset()
+	    blogAuthor.reset()
+	    blogUrl.reset()
+    } catch (error) {
+      props.setNotification('error message', 3)
+    }
   }
-  
-  
-	
+
   return (
     <form onSubmit={createBlog}>
       <div>
@@ -52,9 +47,15 @@ const AddBlog = (props) => {
   )
 }
 
-const mapDispatchToProps = {
-	setNotification,
+const mapStateToProps = (state) => {
+  return {
+    blogs: state.blogs
+  }
 }
 
-const ConnectedAddBlog = connect(null, mapDispatchToProps)(AddBlog)
+const mapDispatchToProps = {
+  setNotification, create
+}
+
+const ConnectedAddBlog = connect(mapStateToProps, mapDispatchToProps)(AddBlog)
 export default ConnectedAddBlog

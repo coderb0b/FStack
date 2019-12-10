@@ -6,6 +6,7 @@ import blogService from './services/blogs'
 import AddBlog from './components/AddBlog'
 import Togglable from './components/Togglable'
 import Notification from './components/Notification'
+import BlogList from './components/BlogList'
 import { useField } from './hooks'
 import { initializeBlogs, like } from './reducers/blogReducer'
 import { setNotification } from './reducers/notificationReducer'
@@ -118,13 +119,13 @@ const App = (props) => {
     window.localStorage.clear()
     setUser(null)
   }
-
+/*
   const likeBlog = (id, event) => {
     try {
       event.preventDefault()
       const blog = props.blogs.find(b => b.id === id)
 	  props.like(blog)
-/*
+
       const newLikes = blog.likes + 1
       const changedBlog = { ...blog, likes: newLikes }
       blogService
@@ -132,15 +133,14 @@ const App = (props) => {
         .then(returnedBlog => {
           setBlogs(props.blogs.map(b => b.id === returnedBlog.id ? changedBlog : b))
         })
-*/
+
     } catch (exception) {
       setMessage(exception.response.data.error)
       setMessageType('error')
     }
-	
-
   }
-
+*/  
+/*
   const deleteBlog = (id, title, event) => {
     event.preventDefault()
     if (window.confirm(`Remove ${title}?`)) {
@@ -151,7 +151,7 @@ const App = (props) => {
         })
     }
   }
-  
+*/  
   const notify = (message, messageType) => {
 	  setMessage(message)
 	  setMessageType(messageType)
@@ -174,17 +174,7 @@ const App = (props) => {
           <Togglable buttonLabel="new blog" ref={addBlogRef}>
             <AddBlog notify={notify} />
           </Togglable>
-          {typeof props.blogs === 'undefined' ? 
-		  <div></div> : props.blogs.sort((a,b) => b.likes - a.likes).map((blog) => {
-			  return (
-            <Blog
-              key={blog.id}
-              blog={blog}
-              likeBlog={(event) => likeBlog(blog.id, event)}
-              deleteBlog={(event) => deleteBlog(blog.id, blog.title, event)}
-              user={user}
-            />)
-          })}
+	  <BlogList user={user} />
         </div>}
     </div>
   )

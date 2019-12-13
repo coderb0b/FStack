@@ -16,8 +16,8 @@ const Blog = (props) => {
     setVisible(!visible)
   }
 
-  const likeBlog = async (event) => {
-    event.preventDefault()
+  const likeBlog = async () => {
+    //event.preventDefault()
     try {
       await props.like(blog)
       await props.setNotification(`You liked '${blog.title} blog`, 3)
@@ -74,7 +74,7 @@ const mapDispatchToProps = {
 
 const mapStateToProps = (state) => {
   return{
-    blogs: state.blogs.data
+    blogs: state.blogs
   }
 }
 

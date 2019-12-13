@@ -5,7 +5,7 @@ const reducer = (state = [],  action) => {
   case 'INIT':
 		  return action.data
   case 'LIKE':
-    console.log('LIKE', action.data)
+    console.log('LIKE', state)
 		  const id = action.data.id
 		  const blogToChange = state.data.find(b => b.id === id)
 		  const changedBlog = {

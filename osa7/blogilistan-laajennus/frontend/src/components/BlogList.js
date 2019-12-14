@@ -6,6 +6,7 @@ import { like } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
 
 const BlogList = (props) => {
+  console.log("LISTAAAAAAAAaaaaa", props)
   const deleteBlog = (id, title, event) => {
     event.preventDefault()
     if (window.confirm(`Remove ${title}?`)) {
@@ -54,8 +55,9 @@ const BlogList = (props) => {
 
 
 const mapStateToProps = (state) => {
+  console.log("STATEEEEEEEEEEEEEEeeeeeeeeeeeeeeee", state)
   return{
-    blogs: state.blogs.data
+    blogs: state.blogs
   }
 }
 

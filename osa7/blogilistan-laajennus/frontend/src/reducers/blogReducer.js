@@ -3,16 +3,19 @@ import blogService from '../services/blogs'
 const reducer = (state = [],  action) => {
   switch (action.type) {
   case 'INIT':
-		  return action.data
+		  return action.data.data
   case 'LIKE':
     console.log('LIKE', state)
-		  const id = action.data.id
-		  const blogToChange = state.data.find(b => b.id === id)
+    console.log("CHANGED", action.data)
+		  const id = action.data
+      const blogToChange = state.find(b => b.id === id)
+      
 		  const changedBlog = {
 			  ...blogToChange,
 			  likes: blogToChange.likes + 1
-		  }
-		  return state.data.map(b =>
+      }
+      console.log("CHANGEDBLOG", changedBlog)
+		  return state.map(b =>
         b.id !== id ? b : changedBlog)
   case 'NEW':
     return state.concat(action.data)
@@ -39,9 +42,7 @@ export const like = blog => {
     const newLike = await blogService.like(changedBlog)
     dispatch({
       type: 'LIKE',
-      data: {
-        id: newLike.id
-      }
+      data: newLike.id
     })
   }
 }

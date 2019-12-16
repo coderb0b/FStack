@@ -10,12 +10,8 @@ import { useField } from './hooks'
 import { initializeBlogs } from './reducers/blogReducer'
 import { setNotification } from './reducers/notificationReducer'
 
-
-
 const App = (props) => {
   const [user, setUser] = useState(null)
-  const [setMessage] = useState(null)
-  const [setMessageType] = useState(null)
   const addBlogRef = React.createRef()
   const username = useField('text')
   const password = useField('password')
@@ -70,23 +66,15 @@ const App = (props) => {
         setUser(user)
         username.reset()
         password.reset()
-        setMessage(`${user.name} logged in`)
-        setMessageType('success')
-        setTimeout(() => {
-          setMessage(null)
-          setMessageType(null)
-        }, 5000)
+        props.setNotification(`${user.name} logged in`, 3)
 		    }
 	    }).catch((error) => {
       if (error.response && error.response.status === 401) {
-        setMessage('wrong credentials')
-        setMessageType('error')
+        props.setNotification('Wrong credentials', 3)
         setTimeout(() => {
-          setMessage(null)
-          setMessageType(null)
 				  username.reset()
 				  password.reset()            
-        }, 5000)
+        }, 3000)
       }
     })
   }
@@ -97,14 +85,7 @@ const App = (props) => {
     setUser(null)
   }
 
-  const notify = (message, messageType) => {
-	  setMessage(message)
-	  setMessageType(messageType)
-	  setTimeout(() => {
-      setMessage(null)
-    }, 5000)
-
-  }
+  
 
   return (
     <div>
@@ -127,7 +108,7 @@ const App = (props) => {
 }
 
 
-export default connect(null, { initializeBlogs })(App)
+export default connect(null, { initializeBlogs, setNotification })(App)
 
 
 

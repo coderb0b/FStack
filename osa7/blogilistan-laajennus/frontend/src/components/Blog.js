@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { like } from '../reducers/blogReducer'
+import { like, remove } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
 
 const Blog = (props) => {
@@ -9,7 +9,6 @@ const Blog = (props) => {
   const hideWhenVisible = { display: visible ? 'none' : '' }
 
   const blog = props.blog
-  const deleteBlog = props.deleteBlog
   const user = props.user
 
   const toggleVisibility = () => {
@@ -19,9 +18,20 @@ const Blog = (props) => {
   const likeBlog = async () => {
     try {
       await props.like(blog)
-      await props.setNotification(`You liked '${blog.title} blog`, 3)
+      await props.setNotification(`You liked '${blog.title}' blog`, 3)
     } catch (error) {
       await props.setNotification('error message', 3)
+    }
+  }
+
+  const deleteBlog = async () => {
+    if (window.confirm(`Remove ${blog.title}?`)) {
+      try {
+        await props.remove(blog)
+        await props.setNotification(`'${blog.title}' blog was deleted`, 3)
+      } catch (error) {
+        await props.setNotification('error message', 3)
+      }
     }
   }
 
@@ -46,9 +56,7 @@ const Blog = (props) => {
 
 		added by {blog.user.name}
         {
-          (user.username === blog.user.username) && <form onSubmit={(event) => deleteBlog(event)}>
-            <button type="submit">Remove</button>
-          </form>
+          (user.username === blog.user.username) && <button onClick={deleteBlog}>Remove</button>
         }
       </div>
     </div>
@@ -56,19 +64,11 @@ const Blog = (props) => {
 
 Blog.propTypes = {
   user: PropTypes.object,
-  deleteBlog: PropTypes.func.isRequired,
-  //likeBlog: PropTypes.func.isRequired,
   blog: PropTypes.object.isRequired,
-
 }
 
-//export default connect(null, { like, setNotification })(Blog)
-
-//export default Blog
-
-
 const mapDispatchToProps = {
-  like, setNotification
+  like, setNotification, remove
 }
 
 const mapStateToProps = (state) => {

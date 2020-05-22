@@ -84,12 +84,53 @@ let books = [
 ]
 
 const typeDefs = gql`
+  type Book {
+      title: String!
+      published: Int!
+      author: String!
+      id: ID!
+      genres: [String!]!
+  }
+
+  type Author {
+      name: String!
+      id: ID!
+      born: Int
+      bookCount: Int
+  }
+
   type Query {
+      bookCount: Int!
+      authorCount: Int!
+      allBooks(author: String, genre: String): [Book!]!
+      allAuthors: [Author!]!
   }
 `
 
 const resolvers = {
   Query: {
+      bookCount: () => books.length,
+      authorCount: () => authors.length,
+      allBooks: (root, args) => {
+        //typeof args.author === 'undefined' ? books : books.filter(b => b.author === args.author),
+        if (typeof args.author !== 'undefined') {
+          if (typeof args.genre !== 'undefined') {
+            return books.filter(b => b.author === args.author).filter(b => b.genres.find(g => g === args.genre))
+          }
+          return books.filter(b => b.author === args.author)
+        } else if (typeof args.genre !== 'undefined') {
+          return books.filter(b => b.genres.find(g => g === args.genre))
+        }
+        return books
+      },
+        
+      allAuthors: () => authors
+  },
+
+  Author: {
+      bookCount: (root) => {
+          return books.filter(b => b.author === root.name).length
+      }
   }
 }
 

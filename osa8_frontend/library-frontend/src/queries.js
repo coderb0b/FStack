@@ -33,3 +33,13 @@ query {
     }
 }
 `
+
+export const SET_BORN = gql`
+mutation editAuthor($author: String!, $born: Int!) {
+  editAuthor(name: $author, setBornTo: $born) {
+    name
+    born
+    bookCount
+  }
+}
+`

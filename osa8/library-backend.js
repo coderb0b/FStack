@@ -1,5 +1,24 @@
-const { ApolloServer, gql } = require('apollo-server')
+const { ApolloServer, UserInputError, gql } = require('apollo-server')
 const uuid = require('uuid/v1')
+
+const mongoose = require('mongoose')
+const Author = require('./models/author')
+const Book = require('./models/book')
+
+mongoose.set('useFindAndModify', false)
+
+const MONGODB_URI = 'mongodb+srv://fullstack:VadCndHpeLMTiYec@cluster0-oyf7z.mongodb.net/gql-library?retryWrites=true&w=majority'
+
+console.log('connecting to', MONGODB_URI)
+
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => {
+    console.log('connected to MongoDB')
+  })
+  .catch((error) => {
+    console.log('error connecting to MongoDB: ', error.message)
+  })
+
 
 let authors = [
   {
@@ -88,9 +107,9 @@ const typeDefs = gql`
   type Book {
       title: String!
       published: Int!
-      author: String!
-      id: ID!
+      author: Author!
       genres: [String!]!
+      id: ID!
   }
 
   type Author {
@@ -123,55 +142,76 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-      bookCount: () => books.length,
-      authorCount: () => authors.length,
-      allBooks: (root, args) => {
-        //typeof args.author === 'undefined' ? books : books.filter(b => b.author === args.author),
+      bookCount: () => Book.collection.countDocuments(),
+      authorCount: () => Author.collection.countDocuments(),
+      allBooks: async (root, args) => {
+        //author to do
         if (typeof args.author !== 'undefined') {
+          author = await Author.findOne({ name: args.author })
+
           if (typeof args.genre !== 'undefined') {
-            return books.filter(b => b.author === args.author).filter(b => b.genres.find(g => g === args.genre))
+            return (await Book.find({ author: author._id })).filter(b => b.genres.find(g => g === args.genre))
           }
-          return books.filter(b => b.author === args.author)
+          return Book.find({ author: author._id })
         } else if (typeof args.genre !== 'undefined') {
-          return books.filter(b => b.genres.find(g => g === args.genre))
+          return (await Book.find()).filter(b => b.genres.find(g => g === args.genre))
         }
-        return books
+        
+        return Book.find()
       },
         
-      allAuthors: () => authors
+      allAuthors: () => Author.find()
   },
 
   Author: {
-      bookCount: (root) => {
-          return books.filter(b => b.author === root.name).length
+      bookCount: root => {
+          return Book.collection.countDocuments({ author: root._id })
       }
   },
 
   Mutation: {
-    addBook: (root, args) => {
-      const book = { ...args, id: uuid() }
-      
-      if (!authors.find(a => a.name === args.author)) {
-        const author = {
-          name: args.author,
-          bookCount: 1
-        }
-        authors = authors.concat(author)
+    addBook: async (root, args) => {
+      author = await Author.findOne({ name: args.author })
+      if (!author) {
+        author = new Author({ name: args.author })
+          try {
+            await author.save()
+          } catch (error) {
+            throw new UserInputError(error.message, {
+              invalidArgs: args,
+            })
+          }
       }
 
-      books = books.concat(book)
+      const book = new Book({
+        title: args.title,
+        published: args.published,
+        author: author._id,
+        genres: args.genres
+      })
+
+      try {
+        await book.save()
+      } catch (error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: args,
+        })
+      }
       return book
     },
 
-    editAuthor: (root, args) => {
-      const author = authors.find(a => a.name === args.name)
-      if (!author) {
-        return null
-      }
+    editAuthor: async (root, args) => {
+      const author = await Author.findOne({ name: args.name })
+      author.born = args.setBornTo
 
-      const updatedAuthor = { ...author, born: args.setBornTo }
-      authors = authors.map(a => a.name === args.name ? updatedAuthor : a)
-      return updatedAuthor
+      try {
+        await author.save()
+      } catch (error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: args,
+        })
+      }
+      return author
     }
   }
 

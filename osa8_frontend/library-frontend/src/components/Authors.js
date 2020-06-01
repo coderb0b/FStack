@@ -3,7 +3,7 @@ import { useQuery, useMutation } from '@apollo/client'
 import { ALL_AUTHORS, SET_BORN } from '../queries'
 
 const Authors = (props) => {
-  const [author, setAuthor] = useState('')
+  let [author, setAuthor] = useState('')
   const [born, setBorn] = useState('')
   
   let authors = useQuery(ALL_AUTHORS)
@@ -19,9 +19,13 @@ const Authors = (props) => {
   if (!props.show) {
     return null
   }
-
+  
   const submit = async (event) => {
     event.preventDefault()
+    
+    if (author.length === 0) {
+      author = authors.data.allAuthors[0].name
+    }
 
     changeBorn({ variables: {author, born} })
 

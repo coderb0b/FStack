@@ -6,6 +6,7 @@ require('dotenv').config()
 const mongoose = require('mongoose')
 const Author = require('./models/author')
 const Book = require('./models/book')
+const User = require('./models/user')
 
 mongoose.set('useFindAndModify', false)
 
@@ -176,7 +177,7 @@ const resolvers = {
     createUser: (root, args) => {
       const user = new User({ 
         username: args.username,
-        favoriteGenre: args.genre
+        favoriteGenre: args.favoriteGenre
        })
 
       return user.save()

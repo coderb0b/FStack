@@ -13,7 +13,7 @@ const Books = (props) => {
   if (!props.show) {
     return null
   }
-console.log("sadsadsdas", books.data)
+
   return (
     <div>
       <h2>books</h2>

@@ -11,14 +11,6 @@ const client = new ApolloClient({
     })
 })
 
-
-/*
-client.query({ query })
-  .then((response) => {
-      console.log(response.data)
-  })
-*/
-
 ReactDOM.render(
     <ApolloProvider client={client}>
       <App />

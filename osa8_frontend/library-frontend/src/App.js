@@ -54,6 +54,7 @@ const App = () => {
     <div>
       <div>
         <button onClick={logout} >logout</button>
+        <Notify errorMessage={errorMessage} />
         <button onClick={() => setPage('authors')}>authors</button>
         <button onClick={() => setPage('books')}>books</button>
         <button onClick={() => setPage('add')}>add book</button>

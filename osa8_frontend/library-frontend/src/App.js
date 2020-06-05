@@ -6,6 +6,9 @@ import Books from './components/Books'
 import NewBook from './components/NewBook'
 import LoginForm from './components/LoginForm'
 
+import { useQuery } from '@apollo/client'
+import { ALL_BOOKS } from './queries'
+
 const Notify = ({ errorMessage }) => {
   if ( !errorMessage ) {
     return null
@@ -38,6 +41,17 @@ const App = () => {
       setErrorMessage(null)
     }, 5000)
   }
+
+  let books_from_db = useQuery(ALL_BOOKS)
+  
+  if (books_from_db.loading) {
+    return <div>loading...</div>
+  }
+
+  //Haetaan erilliset genret listaan
+  let genres = [].concat.apply([], books_from_db.data.allBooks.map(b => b.genres))
+  let distinct_genres = [...new Set(genres)]
+  distinct_genres.sort()
   
   if (!token) {
     return (
@@ -55,6 +69,8 @@ const App = () => {
 
       <Books
         show={page === 'books'}
+        books_from_db={books_from_db.data.allBooks}
+        genres={distinct_genres}
       />
 
       <LoginForm

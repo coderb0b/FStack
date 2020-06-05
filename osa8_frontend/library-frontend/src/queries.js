@@ -24,10 +24,10 @@ query {
       name
     }
     published
+    genres
   }
 }
 `
-
 export const ALL_AUTHORS = gql`
 query {
     allAuthors {

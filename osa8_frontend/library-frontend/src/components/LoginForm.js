@@ -20,6 +20,7 @@ const LoginForm = ({ setError, setToken, page, setPage }) => {
       
       setToken(token)
       localStorage.setItem('library-user-token', token)
+      localStorage.setItem('logged-in-user', username)
       setPage('authors')
     }
   }, [result.data]) // eslint-disable-line

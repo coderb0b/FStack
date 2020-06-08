@@ -5,6 +5,7 @@ import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
 import LoginForm from './components/LoginForm'
+import Recommend from './components/Recommend'
 
 import { useQuery } from '@apollo/client'
 import { ALL_BOOKS } from './queries'
@@ -90,11 +91,12 @@ const App = () => {
   return (
     <div>
       <div>
-        <button onClick={logout} >logout</button>
         <Notify errorMessage={errorMessage} />
         <button onClick={() => setPage('authors')}>authors</button>
         <button onClick={() => setPage('books')}>books</button>
         <button onClick={() => setPage('add')}>add book</button>
+        <button onClick={() => setPage('recommend')}>recommend</button>
+        <button onClick={logout} >logout</button>
       </div>
 
       <Authors
@@ -109,6 +111,11 @@ const App = () => {
 
       <NewBook
         show={page === 'add'}
+      />
+
+      <Recommend
+        show={page === 'recommend'}
+        books_from_db={books_from_db.data.allBooks}
       />
 
     </div>

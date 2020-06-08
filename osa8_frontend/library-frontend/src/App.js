@@ -103,6 +103,8 @@ const App = () => {
 
       <Books
         show={page === 'books'}
+        books_from_db={books_from_db.data.allBooks}
+        genres={distinct_genres}
       />
 
       <NewBook

@@ -4,12 +4,15 @@ import { BOOKS_BY_GENRE } from '../queries'
 
 const Books = ({ show, books_from_db, genres}) => {
   const [books, setBooks] = useState(books_from_db)
-  const [filteredBooks, { loading, data }] = useLazyQuery(BOOKS_BY_GENRE)
   const [genre, setGenre] = useState('')
+
+  const [filteredBooks, { loading, data }] = useLazyQuery(BOOKS_BY_GENRE, {
+    fetchPolicy: "no-cache"
+  })
 
   useEffect(() => {
     if (data && data.allBooks) {
-      setBooks(data.allBooks)
+      setBooks(data.allBooks)      
     }
   }, [data, setBooks])
 
@@ -34,7 +37,7 @@ const Books = ({ show, books_from_db, genres}) => {
   return (
     <div>
       <h2>books</h2>
-  {books_from_db !== books ? <p>in genre <b>{genre}</b> </p> : null}
+  {genre.length === 0 ? null : <p>in genre <b>{genre}</b> </p>}
 
       <table>
         <tbody>
@@ -60,7 +63,7 @@ const Books = ({ show, books_from_db, genres}) => {
       {genres.map(genre => 
         <button key={genre} value={genre} onClick={(event) => { fgenres(event); filteredBooks({ variables: { genre }}) }}>{genre}</button>
         )}
-        <button onClick={fgenres}>all genres</button>
+        <button onClick={(event) => { fgenres(event); filteredBooks({ variables: {  }}) }}>all genres</button>
       </div>
     </div>
   )

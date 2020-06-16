@@ -34,7 +34,6 @@ const App = () => {
     setPage('authors')
   }
 
-
   const notify = (message) => {
     setErrorMessage(message)
     setTimeout(() => {
@@ -42,13 +41,31 @@ const App = () => {
     }, 5000)
   }
 
+  const updateCacheWith = (addedBook) => {
+    const includedIn = (set, object) => {
+      set.map(p => p.id).includes(object.id)
+    }
+
+    const dataInStore = client.readQuery({ query: ALL_BOOKS })
+    if(!includedIn(dataInStore.allBooks, addedBook)) {
+      client.writeQuery({
+        query: ALL_BOOKS,
+        data: { allBooks : dataInStore.allBooks.concat(addedBook) }
+      })
+    }
+  }
+
   useSubscription(BOOK_ADDED, {
     onSubscriptionData: ({ subscriptionData }) => {
+      const addedBook = subscriptionData.data.bookAdded
       window.alert(subscriptionData.data.bookAdded.title + " added")
+      updateCacheWith(addedBook)
     }
   })
 
-  let books_from_db = useQuery(ALL_BOOKS)
+  let books_from_db = useQuery(ALL_BOOKS, {
+    returnPartialData: true
+  })
   
   if (books_from_db.loading) {
     return <div>loading...</div>

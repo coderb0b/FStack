@@ -33,6 +33,10 @@ const Authors = (props) => {
     setBorn('')
   }
 
+  if (authors.data === undefined) {
+    return null
+  }
+
   return (
     <div>
       <h2>authors</h2>

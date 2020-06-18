@@ -10,6 +10,7 @@ const mongoose = require('mongoose')
 const Author = require('./models/author')
 const Book = require('./models/book')
 const User = require('./models/user')
+const author = require('./models/author')
 
 mongoose.set('useFindAndModify', false)
 
@@ -107,7 +108,7 @@ const resolvers = {
         return Book.find()
       },
         
-      allAuthors: () => Author.find(),
+      allAuthors: () => Author.find().populate('bookCount'),
       me: (root, args, context) => {
         return context.currentUser
       }
@@ -115,7 +116,10 @@ const resolvers = {
 
   Author: {
       bookCount: root => {
-          return Book.collection.countDocuments({ author: root._id })
+        if (root.books.length > 0) {
+          return root.books.length
+        }
+        return 0
       }
   },
 
@@ -133,7 +137,7 @@ const resolvers = {
         throw new AuthenticationError("not authenticated")
       }
       
-      author = await Author.findOne({ name: args.author })
+      let author = await Author.findOne({ name: args.author })
       if (!author) {
         author = new Author({ name: args.author })
           try {
@@ -153,7 +157,9 @@ const resolvers = {
       })
 
       try {
-        await book.save()
+        saved_book = await book.save()
+        author.books = author.books.concat(saved_book)
+        await author.save()
       } catch (error) {
         throw new UserInputError(error.message, {
           invalidArgs: args,

@@ -20,6 +20,12 @@ const calculateBmi = (height: number, weight: number): string => {
     } else if (bmi >= 40) {
         return 'Obese Class III (Very severely obese)'
     }
+    throw new Error('Not good arguments')
 }
 
-console.log(calculateBmi(180, 74))
+const height: number = Number(process.argv[2])
+const weight: number = Number(process.argv[3])
+
+if (process.argv.length < 4) throw new Error('Incorrect amount of arguments, give two')
+
+console.log(calculateBmi(height, weight))

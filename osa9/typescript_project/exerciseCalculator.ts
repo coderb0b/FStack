@@ -1,7 +1,9 @@
-const calculateExercises = (hours: number[], target: number) => {
+const calculateExercises = (target: number, hours: number[]): object => {
     const hours_average = hours.reduce((a,b) => a+b, 0) / hours.length
     let rate = 1
     let desc = ''
+
+    if (isNaN(hours_average)) throw new Error('Bad arguments')
 
     if (target - hours_average < 0) {
         rate = 3
@@ -26,5 +28,8 @@ const calculateExercises = (hours: number[], target: number) => {
     return res
 }
 
+const target: number = Number(process.argv[2])
+const hours: number[] = String(process.argv.slice(3)).split(",").map(x => parseFloat(x))
 
-console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2))
+console.log(calculateExercises(target, hours))
+

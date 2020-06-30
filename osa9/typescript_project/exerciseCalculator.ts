@@ -1,4 +1,14 @@
-const calculateExercises = (target: number, hours: number[]) => {
+interface ExerciseRes {
+    periodLength: number;
+    trainingDays: number;
+    success: boolean;
+    rating: number;
+    ratingDescription: string;
+    target: number;
+    average: number;
+}
+
+export const calculateExercises = (target: number, hours: number[]): ExerciseRes => {
     const hours_average = hours.reduce((a,b) => a+b, 0) / hours.length;
     let rate = 1;
     let desc = '';
@@ -31,5 +41,6 @@ const calculateExercises = (target: number, hours: number[]) => {
 const target = Number(process.argv[2]);
 const hours: number[] = String(process.argv.slice(3)).split(",").map(x => parseFloat(x));
 
-console.log(calculateExercises(target, hours));
+if (target && hours) console.log(calculateExercises(target, hours));
+//console.log(calculateExercises(target, hours));
 

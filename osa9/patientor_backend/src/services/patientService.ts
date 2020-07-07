@@ -1,6 +1,6 @@
 import patientData from '../../data/patients.json';
-
 import { Patient, NonSensitivePatientEntry, NewPatientEntry } from '../types';
+import toNewPatientEntry from '../utils';
 
 const getEntries = (): NonSensitivePatientEntry [] => {
     return patientData.map(({ id, name, dateOfBirth, gender, occupation }) => ({
@@ -22,8 +22,15 @@ const addPatient = ( entry: NewPatientEntry ): Patient => {
     return newPatientEntry;
 };
 
+const patientEntries: Patient [] = patientData.map(obj => {
+    const object = toNewPatientEntry(obj) as Patient;
+    object.id = obj.id;
+    return object;
+});
+
 export default {
     getEntries,
-    addPatient
+    addPatient,
+    patientEntries
 };
 
